@@ -1,11 +1,14 @@
 from app.application.property_service import PropertyService
+from app.application.reservation_service import ReservationService
 
 
 class Console:
     propertyService = None
+    reservationService = None
 
     def __init__(self) -> None:
         self.propertyService = PropertyService()
+        self.reservationService = ReservationService()
 
     def start(self):
         while True:
@@ -27,5 +30,17 @@ class Console:
                     )
                     print(f"{'---'*50}")
             elif opt == 2:
-                pass
+                print("\n")
+                daysToBooking = int(input(
+                    "¿Cuántos días faltan para el inicio de la reserva? "
+                ))
+                propertyType = int(input(
+                    "¿Qué tipo de propiedad es? (1 = Departamento, 2 = Mini-Departamento, 3 = Cuarto) "
+                ))
+                messageToCancel = self.reservationService.canCancelReservation(
+                    daysToBooking,
+                    propertyType
+                )
+                print(f"\n {messageToCancel}")
+
         print("Sesión terminada")
