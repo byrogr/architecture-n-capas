@@ -15,7 +15,7 @@ class ReservationService:
         property: Property = Property(
             propertyDto.propertyId,
             propertyDto.name,
-            PropertyDTO.type,
-            PropertyDTO.maxGuest
+            propertyDto.type,
+            propertyDto.maxGuest
         )
         return rule.couldCancel(property, days)
