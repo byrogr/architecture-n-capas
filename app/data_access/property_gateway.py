@@ -1,8 +1,6 @@
 import sqlite3
 import sys
 
-from app.domain.property_dto import PropertyDTO
-
 
 class SingletonPropertyGateway(type):
     _instances = {}
@@ -55,15 +53,11 @@ class PropertyGateway(metaclass=SingletonPropertyGateway):
         self.connection.commit()
 
     def getAll(self) -> list:
-        properties: list[PropertyDTO] = []
         try:
             self.connection = sqlite3.connect(f'{sys.path[0]}/data/demo.db')
             resultSet = self.connection.execute(
                 "SELECT propertyId, name, type, maxGuest FROM properties"
             )
-            for row in resultSet.fetchall():
-                property = PropertyDTO(row[0], row[1], row[2], row[3])
-                properties.append(property)
-            return properties
+            return resultSet.fetchall()
         except sqlite3.OperationalError:
             print("could not get the records from database")

@@ -1,5 +1,5 @@
-from app.application.property_service import PropertyService
-from app.application.reservation_service import ReservationService
+from app.services.property_service import PropertyService
+from app.services.reservation_service import ReservationService
 
 
 class Console:
@@ -22,7 +22,7 @@ class Console:
                 break
 
             if opt == 1:
-                properties: list = self.propertyService.getAllProperties()
+                properties: list = self.propertyService.findAll()
                 print("\nListado de propiedades\n")
                 for property in properties:
                     print(
@@ -34,13 +34,24 @@ class Console:
                 daysToBooking = int(input(
                     "¿Cuántos días faltan para el inicio de la reserva? "
                 ))
-                propertyType = int(input(
-                    "¿Qué tipo de propiedad es? (1 = Departamento, 2 = Mini-Departamento, 3 = Cuarto) "
+
+                properties = self.propertyService.findAll()
+                print("\nListado de propiedades")
+                for i in range(0, len(properties)):
+                    print(f'[{i}] {properties[i].name}')
+
+                propertySelected = int(input(
+                    "\n¿De que propiedad deseas cancelar la reserva? "
                 ))
-                messageToCancel = self.reservationService.canCancelReservation(
-                    daysToBooking,
-                    propertyType
+                property = properties[propertySelected]
+                canCancelProperty = self.reservationService.couldCancel(
+                    property,
+                    daysToBooking
                 )
+                messageToCancel = "---> Se puede cancelar la reserva <---"
+                if not canCancelProperty:
+                    messageToCancel = "---> No se puede cancelar la reserva <---"
+
                 print(f"\n {messageToCancel}")
 
         print("Sesión terminada")
